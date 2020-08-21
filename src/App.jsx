@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css'
-import { FormGroup, FormControl, InputGroup, Glyphicon } from 'bootstrap'
+import { FormGroup, FormControl, InputGroup } from 'react-bootstrap'
+import { FaSearch } from "react-icons/fa"
 
 class App extends React.Component {
   render() {
@@ -9,10 +10,17 @@ class App extends React.Component {
         <div className="App-title">
           Music Master
         </div>
-        <div>
-          <input placeholder="search an artist..."/>
-          <button>button</button>
-        </div> 
+          <FormGroup>
+          <InputGroup>
+            <FormControl
+              type="text"
+              placeholder="Search for an Artist"
+            />
+            <InputGroup.Append>
+              <FaSearch/>
+            </InputGroup.Append>
+          </InputGroup>
+         </FormGroup>  
         <div className="Profile">
           <div>Artist Picture</div>
           <div>Artist Name</div>
