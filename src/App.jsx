@@ -1,9 +1,11 @@
 import React from 'react';
+import './App.css'
+import { FormGroup, FormControl, InputGroup, Glyphicon } from 'bootstrap'
 
 class App extends React.Component {
   render() {
     return(
-      <div>
+      <div className="App">
         <div className="App-title">
           Music Master
         </div>
