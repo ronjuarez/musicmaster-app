@@ -13,6 +13,22 @@ class App extends React.Component {
 
   search() {
     console.log('Current Search', this.state);
+    const TOKEN = 'BQBEK0U-uZEkI5yzOmLJe6NlVsrpLn7MNpw5bDOMaDfDrfGnz6KnRrSvJ5YVYGfYlZGfzeXPd-0j6qU3ArJmBLPAtbII2HpgBIOOiF78vYozBogdJuiMvuJpTLt9jdlGC-0Ux-B8O6yDgxdpmKKNv83XTLArkSV_6qA'
+    const BASE_URL = 'https://api.spotify.com/v1/search?'
+    const FETCH_URL = `${BASE_URL}q=${this.state.query}&type=artist&limit=1`;
+    console.log('Fetch', FETCH_URL)
+
+    fetch(FETCH_URL, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TOKEN}`
+      },
+    })
+    .then(res => res.json())
+    .then(json => console.log('json', json))
+    .catch(error => console.log('error', error))
     this.setState({query: ''})
   }
 
