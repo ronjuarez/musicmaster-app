@@ -2,28 +2,61 @@ import React from 'react';
 import './App.css'
 import { FormGroup, FormControl, InputGroup } from 'react-bootstrap'
 import { FaSearch } from "react-icons/fa"
+import axios from 'axios';
+import qs from 'qs';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: ''
+      query: '',
+      token: ''
     }
   }
 
+  
+  componentDidMount() {
+    const CLIENTID = process.env.REACT_APP_CLIENTID;  
+    const SECRETID = process.env.REACT_APP_SECRETID;
+    
+    const headers = {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      auth: {
+        username: CLIENTID,
+        password: SECRETID
+      }
+    }
+  
+    const data = {
+      grant_type: 'client_credentials'
+    }
+  
+    axios.post("https://accounts.spotify.com/api/token",
+      qs.stringify(data),
+      headers
+      )
+      .then(res => {
+        const { access_token } = res.data;
+        this.setState({
+          token: access_token
+        })
+      })
+      .catch(error => console.log(error)) 
+  }
+
   search() {
-    console.log('Current Search', this.state);
-    const TOKEN = 'BQBEK0U-uZEkI5yzOmLJe6NlVsrpLn7MNpw5bDOMaDfDrfGnz6KnRrSvJ5YVYGfYlZGfzeXPd-0j6qU3ArJmBLPAtbII2HpgBIOOiF78vYozBogdJuiMvuJpTLt9jdlGC-0Ux-B8O6yDgxdpmKKNv83XTLArkSV_6qA'
     const BASE_URL = 'https://api.spotify.com/v1/search?'
     const FETCH_URL = `${BASE_URL}q=${this.state.query}&type=artist&limit=1`;
-    console.log('Fetch', FETCH_URL)
-
+    console.log(FETCH_URL)
     fetch(FETCH_URL, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${TOKEN}`
+        'Authorization': `Bearer ${this.state.token}`
       },
     })
     .then(res => res.json())
@@ -31,6 +64,20 @@ class App extends React.Component {
     .catch(error => console.log('error', error))
     this.setState({query: ''})
   }
+    
+    
+    
+    // (FETCH_URL, {
+    //   method: 'GET',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //     'Authorization': `Bearer ${TOKEN}`
+    //   },
+    // })
+    // .then(res => res.json())
+    // .then(json => console.log('ARTISTS:', json.artists.items[0]))
+    // .catch(error => console.log('error', error))
 
   render() {
     return(
