@@ -4,13 +4,15 @@ import { FormGroup, FormControl, InputGroup } from 'react-bootstrap'
 import { FaSearch } from "react-icons/fa"
 import axios from 'axios';
 import qs from 'qs';
+import Profile from './Profile'
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       query: '',
-      token: ''
+      token: '',
+      artist: null
     }
   }
 
@@ -60,24 +62,13 @@ class App extends React.Component {
       },
     })
     .then(res => res.json())
-    .then(json => console.log('json', json))
+    .then(json => {
+      const artist = json.artists.items[0];
+      this.setState({ artist})
+    })
     .catch(error => console.log('error', error))
     this.setState({query: ''})
   }
-    
-    
-    
-    // (FETCH_URL, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${TOKEN}`
-    //   },
-    // })
-    // .then(res => res.json())
-    // .then(json => console.log('ARTISTS:', json.artists.items[0]))
-    // .catch(error => console.log('error', error))
 
   render() {
     return(
@@ -101,14 +92,9 @@ class App extends React.Component {
             </div>            
             </InputGroup.Append>
           </InputGroup>
-         </FormGroup>  
-        <div className="Profile">
-          <div>Artist Picture</div>
-          <div>Artist Name</div>
-        </div>
-        <div className="Gallery">
-          Gallery
-        </div>
+         </FormGroup>
+          <Profile
+            artist={this.state.artist}/>
       </div>
     )
   }
