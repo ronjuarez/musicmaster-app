@@ -5,6 +5,7 @@ import { FaSearch } from "react-icons/fa"
 import axios from 'axios';
 import qs from 'qs';
 import Profile from './Profile'
+import Gallery from './Gallery'
 
 class App extends React.Component {
   constructor(props) {
@@ -115,11 +116,14 @@ class App extends React.Component {
           </InputGroup>
          </FormGroup>
          {
-           this.state.artist !== null ?
-          <Profile
-            artist={this.state.artist}/> :
-
-          <div/>
+          this.state.artist !== null ?
+            <div>
+                <Profile
+                  artist={this.state.artist}/>
+                <Gallery
+                  tracks={this.state.tracks}/> 
+            </div> :
+            <div/>
          }
         </div>
     )
