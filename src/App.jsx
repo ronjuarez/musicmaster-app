@@ -14,7 +14,7 @@ class App extends React.Component {
       query: '',
       token: '',
       artist: null,
-      tracks: []
+      tracks: [],
     }
   }
 
@@ -121,7 +121,11 @@ class App extends React.Component {
                 <Profile
                   artist={this.state.artist}/>
                 <Gallery
-                  tracks={this.state.tracks}/> 
+                  tracks={this.state.tracks}
+                  playindUrl={this.state.playingUrl}
+                  audio={this.state.audio}
+                  playing={this.state.playing}
+                  setState={this.setState()}/> 
             </div> :
             <div/>
          }
