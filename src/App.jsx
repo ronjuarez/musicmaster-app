@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css'
 import { FormGroup, FormControl, InputGroup } from 'react-bootstrap'
 import { FaSearch } from "react-icons/fa"
@@ -7,53 +7,46 @@ import qs from 'qs';
 import Profile from './Profile'
 import Gallery from './Gallery'
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      query: '',
-      token: '',
-      artist: null,
-      tracks: [],
+export default function App() {
+
+  const CLIENTID = process.env.REACT_APP_CLIENTID;  
+  const SECRETID = process.env.REACT_APP_SECRETID;
+  
+  const headers = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    auth: {
+      username: CLIENTID,
+      password: SECRETID
     }
   }
 
+  const data = {
+    grant_type: 'client_credentials'
+  }
+
+  const [token, setToken] = useState('')
+  const [query, setQuery] = useState('')
+  const [artist, setArtist] = useState(null)
+  const [tracks, setTracks] = useState([])
   
-  componentDidMount() {
-    const CLIENTID = process.env.REACT_APP_CLIENTID;  
-    const SECRETID = process.env.REACT_APP_SECRETID;
-    
-    const headers = {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      auth: {
-        username: CLIENTID,
-        password: SECRETID
-      }
-    }
-  
-    const data = {
-      grant_type: 'client_credentials'
-    }
-  
+  useEffect(() => {
     axios.post("https://accounts.spotify.com/api/token",
       qs.stringify(data),
       headers
       )
       .then(res => {
-        const { access_token } = res.data;
-        this.setState({
-          token: access_token
-        })
+        const {access_token} = res.data;
+        setToken(access_token)
       })
       .catch(error => console.log(error)) 
-  }
+  }, [])
 
-  search() {
+  const search = () => {
     const BASE_URL = 'https://api.spotify.com/v1/search?'
-    let FETCH_URL = `${BASE_URL}q=${this.state.query}&type=artist&limit=1`;
+    let FETCH_URL = `${BASE_URL}q=${query}&type=artist&limit=1`;
     const ALBUM_URL = 'https://api.spotify.com/v1/artists/'
     console.log(FETCH_URL)
 
@@ -62,13 +55,13 @@ class App extends React.Component {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.state.token}`
+        'Authorization': `Bearer ${token}`
       },
     })
     .then(res => res.json())
     .then(json => {
       const artist = json.artists.items[0];
-      this.setState({ artist })
+      setArtist(artist)
 
     FETCH_URL = `${ALBUM_URL}${artist.id}/top-tracks?country=US&`
 
@@ -77,22 +70,21 @@ class App extends React.Component {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.state.token}`
+        'Authorization': `Bearer ${token}`
       },
     })
       .then(res => res.json())
       .then(json => {
         const { tracks } = json;
         console.log('top tracks', tracks)
-        this.setState({ tracks })
+        setTracks(tracks)
       })
     })
     .catch(error => console.log('error', error))
-    this.setState({query: ''})
+      setQuery('')
 
   }
 
-  render() {
     return(
       <div className="App">
         <div className="App-title">
@@ -103,12 +95,12 @@ class App extends React.Component {
             <FormControl
               type="text"
               placeholder="Search for an Artist"
-              value={this.state.query}
-              onChange={e =>{this.setState({ query: e.target.value})}}
-              onKeyPress={e => e.key === 'Enter' ? this.search() : e.key}
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              onKeyPress={e => e.key === 'Enter' ? search() : e.key}
             />
             <InputGroup.Append
-              onClick={() => this.search()}>
+              onClick={() => search()}>
             <div className="App-srchbtn">
               <FaSearch/>
             </div>            
@@ -116,22 +108,15 @@ class App extends React.Component {
           </InputGroup>
          </FormGroup>
          {
-          this.state.artist !== null ?
+          artist !== null ?
             <div>
                 <Profile
-                  artist={this.state.artist}/>
+                  stateArtist={artist}/>
                 <Gallery
-                  tracks={this.state.tracks}
-                  playindUrl={this.state.playingUrl}
-                  audio={this.state.audio}
-                  playing={this.state.playing}
-                  setState={this.setState()}/> 
+                  tracks={tracks}/> 
             </div> :
             <div/>
          }
         </div>
     )
   }
-}
-
-export default App;

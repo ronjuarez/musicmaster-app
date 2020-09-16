@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
 
-class Profile extends Component {
-  render() {
+export default function Profile({
+  stateArtist
+}) {
+
     let artist = {
       name: '',
       followers: {
@@ -14,7 +16,12 @@ class Profile extends Component {
       genres : []
     }
 
-    artist = this.props.artist !== null ? artist = this.props.artist : artist
+    artist = stateArtist !== null ? artist = stateArtist : artist
+
+    let titleCase = (genre) => {
+      let formattedGenres = genre.split(' ').map(word => word.replace(word.charAt(0), word.charAt(0).toUpperCase()))
+      return formattedGenres.join(' ')
+    }
 
     return (
       <div className="profile">
@@ -31,7 +38,7 @@ class Profile extends Component {
             artist.genres.map((genre, k) =>{
               genre = genre !== artist.genres[artist.genres.length-1] ? `${genre},` : ` & ${genre}`; 
               return(
-                <span key={k}>{genre}</span>
+                <span key={k}>{titleCase(genre)}</span>
               )
             })
           }
@@ -40,6 +47,3 @@ class Profile extends Component {
     </div>
     )
   }
-}
-
-export default Profile;

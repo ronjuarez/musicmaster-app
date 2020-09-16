@@ -1,47 +1,36 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './App.css'
 
-class Gallery extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      playindUrl :'',
-      audio: null,
-      playing: false
-    }
-  }
+
+export default function Gallery ({
+  tracks
+}) {
  
-  playAudio(previewUrl){
+  const [is_playing, set_is_playing] = useState(false);
+  const [stateAudio, set_audio] = useState(null);
+  const [playingUrl, set_playing_url] = useState('')
+
+  function playAudio(previewUrl){
     
     let audio = new Audio(previewUrl);
   
-    if (!this.state.playing) {
+    if (!playingUrl) {
       audio.play()
-      this.setState({
-        playing: true,
-        playingUrl: previewUrl,
-        audio
-      })
+      set_playing_url(previewUrl);
+      set_is_playing(true);
+      set_audio(audio);
     } else {
-        if(this.state.playingUrl === previewUrl) {
-        this.state.audio.pause();
-        this.setState({
-          playing: false
-        })
+        if(playingUrl === previewUrl) {
+        stateAudio.pause();
+        set_is_playing(false);
       } else {
-        this.state.audio.pause();
+        stateAudio.pause();
         audio.play();
-        this.setState({
-          playing: true,
-          playingUrl: previewUrl,
-          audio
-        })
+        set_audio(audio);
+        set_is_playing(true)
       }
     }
   }
-
-  render() {
-    const { tracks } = this.props;
 
     return (
       <div>
@@ -50,7 +39,7 @@ class Gallery extends Component {
             <div
               key={k}
               className='track'
-              onClick={() => this.playAudio(track.preview_url)}
+              onClick={() => playAudio(track.preview_url)}
             >
               <img
                 src={track.album.images[0].url}
@@ -66,6 +55,3 @@ class Gallery extends Component {
       </div>
     )
   }
-}
-
-export default Gallery;
