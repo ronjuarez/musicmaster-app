@@ -23,12 +23,15 @@ export default function Gallery ({
         if(playingUrl === previewUrl) {
         stateAudio.pause();
         set_is_playing(false);
-      } else {
-        stateAudio.pause();
-        audio.play();
-        set_audio(audio);
-        set_is_playing(true)
-      }
+        set_playing_url('')
+        set_audio(null)
+        } else {
+          stateAudio.pause();
+          audio.play();
+          set_audio(audio);
+          set_playing_url(previewUrl)
+          set_is_playing(true)
+        }
     }
   }
 
@@ -39,7 +42,7 @@ export default function Gallery ({
             <div
               key={k}
               className='track'
-              onClick={() => playAudio(track.preview_url)}
+              onClick={() => playAudio(track.preview_url)} 
             >
               <img
                 src={track.album.images[0].url}
