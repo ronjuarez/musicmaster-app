@@ -19,3 +19,7 @@ Single page app that connects to the Spotify-API and performs a search of artist
 3. Run musicmaster using `npm start`.
 
 ---
+
+## On LOAD the musicmaster search bar will appear type the name of an artist and click on the album artwork to hear a short clip of the selected song.
+
+![First Screen](https://github.com/ronjuarez/musicmaster-app/blob/master/gifs/musicmaster.gif)
