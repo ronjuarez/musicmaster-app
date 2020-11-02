@@ -16,6 +16,7 @@ Single page app that connects to the Spotify-API and performs a search of artist
 
 1. Clone this repo.
 2. Install dependencies using `npm i`.
+3. Create a CLIENT ID and SECRETID on Spotify by clicking [here](https://developer.spotify.com/documentation/general/guides/app-settings/) store it in a `.env` file, following the `.env.example` file.
 3. Run musicmaster using `npm start`.
 
 ---
